@@ -24,4 +24,14 @@ app.post("/api/subtract", (req, res) => {
   res.json({ difference });
 });
 
+// Multiplication endpoint
+app.post("/api/multiply", (req, res) => {
+  const { input1, input2 } = req.body;
+  if (typeof input1 !== "number" || typeof input2 !== "number") {
+    return res.status(400).json({ error: "Invalid inputs" });
+  }
+  const product = input1 * input2;
+  res.json({ product });
+});
+
 module.exports = app;
