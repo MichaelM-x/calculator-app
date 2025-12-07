@@ -1,116 +1,54 @@
-import { useState } from "react";
+import React from "react";
+import "./Calculator.css"; // ← Add this
 
 export default function Calculator() {
-  const [a, setA] = useState("");
-  const [b, setB] = useState("");
-  const [op, setOp] = useState("+");
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
+  const input1Ref = React.createRef();
+  const input2Ref = React.createRef();
+  const operatorRef = React.createRef();
+  const resultRef = React.createRef();
 
-  const calculate = async () => {
-    const numA = parseFloat(a);
-    const numB = parseFloat(b);
+  const calculate = () => {
+    const a = Number(input1Ref.current.value);
+    const b = Number(input2Ref.current.value);
+    const op = operatorRef.current.value;
 
-    // Validation
-    if (isNaN(numA) || isNaN(numB)) {
-      setResult("Invalid input");
+    if (isNaN(a) || isNaN(b)) {
+      resultRef.current.value = "Invalid";
       return;
     }
 
-    // Choose endpoint
-    let endpoint = "";
-    switch (op) {
-      case "+":
-        endpoint = "/api/add";
-        break;
-      case "-":
-        endpoint = "/api/subtract";
-        break;
-      case "*":
-        endpoint = "/api/multiply";
-        break;
-      default:
-        return;
-    }
+    let output;
+    if (op === "+") output = a + b;
+    else if (op === "-") output = a - b;
+    else if (op === "*") output = a * b;
 
-    try {
-      setLoading(true);
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ a: numA, b: numB }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setResult("Error");
-      } else {
-        setResult(data.result);
-      }
-    } catch (error) {
-      setResult("Network error");
-    } finally {
-      setLoading(false);
-    }
+    resultRef.current.value = String(output);
   };
 
   return (
-    <div style={{ maxWidth: "300px", margin: "20px auto" }}>
-      <h2>Calculator</h2>
+    <div className="calc-container">
+      <div className="calc-row">
+        <label htmlFor="input1">Input1</label>
+        <input id="input1" ref={input1Ref} onBlur={calculate} />
+      </div>
 
-      <input
-        aria-label="input-a"
-        value={a}
-        onChange={(e) => setA(e.target.value)}
-        placeholder="Enter first number"
-        style={{ display: "block", width: "100%", marginBottom: "10px" }}
-      />
+      <div className="calc-row">
+        <label htmlFor="input2">Input2</label>
+        <input id="input2" ref={input2Ref} onBlur={calculate} />
+      </div>
 
-      <input
-        aria-label="input-b"
-        value={b}
-        onChange={(e) => setB(e.target.value)}
-        placeholder="Enter second number"
-        style={{ display: "block", width: "100%", marginBottom: "10px" }}
-      />
+      <div className="calc-row">
+        <label htmlFor="operator">Operator</label>
+        <select id="operator" ref={operatorRef} onChange={calculate}>
+          <option value="+">+</option>
+          <option value="-">−</option>
+          <option value="*">×</option>
+        </select>
+      </div>
 
-      <select
-        aria-label="operator"
-        value={op}
-        onChange={(e) => setOp(e.target.value)}
-        style={{ width: "100%", marginBottom: "10px" }}
-      >
-        <option value="+">Add (+)</option>
-        <option value="-">Subtract (-)</option>
-        <option value="*">Multiply (*)</option>
-      </select>
-
-      <button
-        aria-label="calculate-btn"
-        onClick={calculate}
-        style={{
-          width: "100%",
-          padding: "8px",
-          marginBottom: "15px",
-          cursor: "pointer",
-        }}
-        disabled={loading}
-      >
-        {loading ? "Calculating..." : "Calculate"}
-      </button>
-
-      <div
-        aria-label="result"
-        style={{
-          padding: "10px",
-          border: "1px solid #ccc",
-          minHeight: "30px",
-          textAlign: "center",
-        }}
-      >
-        {result}
+      <div className="calc-row">
+        <label htmlFor="result">Result</label>
+        <input id="result" ref={resultRef} readOnly />
       </div>
     </div>
   );
