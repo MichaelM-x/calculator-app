@@ -12,7 +12,7 @@ describe("POST/add", () => {
   });
   it("handle invalid inputs", async () => {
     const res = await request(app)
-      .post("api/add")
+      .post("/api/add")
       .send({ input1: "five", input2: 10 });
 
     expect(res.statusCode).toEqual(400);
