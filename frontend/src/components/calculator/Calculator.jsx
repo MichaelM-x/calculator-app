@@ -11,9 +11,9 @@ const Calculator = () => {
     const num2 = Number(input2);
 
     let endpoint = "";
-    if (operator === "+") endpoint = "/api/add";
-    if (operator === "-") endpoint = "/api/subtract";
-    if (operator === "*") endpoint = "/api/multiply";
+    if (operator === "+") endpoint = "http://localhost:5000/api/add";
+    if (operator === "-") endpoint = "http://localhost:5000/api/subtract";
+    if (operator === "*") endpoint = "http://localhost:5000/api/multiply";
 
     try {
       const res = await fetch(endpoint, {
