@@ -1,55 +1,81 @@
-import React from "react";
-import "./Calculator.css"; // ← Add this
+import React, { useState } from "react";
 
-export default function Calculator() {
-  const input1Ref = React.createRef();
-  const input2Ref = React.createRef();
-  const operatorRef = React.createRef();
-  const resultRef = React.createRef();
+const Calculator = () => {
+  const [input1, setInput1] = useState("");
+  const [input2, setInput2] = useState("");
+  const [operator, setOperator] = useState("+");
+  const [result, setResult] = useState("");
 
-  const calculate = () => {
-    const a = Number(input1Ref.current.value);
-    const b = Number(input2Ref.current.value);
-    const op = operatorRef.current.value;
+  const calculate = async () => {
+    const num1 = Number(input1);
+    const num2 = Number(input2);
 
-    if (isNaN(a) || isNaN(b)) {
-      resultRef.current.value = "Invalid";
-      return;
+    let endpoint = "";
+    if (operator === "+") endpoint = "/api/add";
+    if (operator === "-") endpoint = "/api/subtract";
+    if (operator === "*") endpoint = "/api/multiply";
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input1: num1, input2: num2 }),
+      });
+
+      const data = await res.json();
+
+      // API returns different keys
+      if (data.sum !== undefined) setResult(data.sum);
+      else if (data.difference !== undefined) setResult(data.difference);
+      else if (data.product !== undefined) setResult(data.product);
+      else setResult("Error");
+    } catch (err) {
+      console.error(err);
+      setResult("Error");
     }
-
-    let output;
-    if (op === "+") output = a + b;
-    else if (op === "-") output = a - b;
-    else if (op === "*") output = a * b;
-
-    resultRef.current.value = String(output);
   };
 
   return (
     <div className="calc-container">
       <div className="calc-row">
         <label htmlFor="input1">Input1</label>
-        <input id="input1" ref={input1Ref} onBlur={calculate} />
+        <input
+          id="input1"
+          value={input1}
+          onChange={(e) => setInput1(e.target.value)}
+        />
       </div>
 
       <div className="calc-row">
         <label htmlFor="input2">Input2</label>
-        <input id="input2" ref={input2Ref} onBlur={calculate} />
+        <input
+          id="input2"
+          value={input2}
+          onChange={(e) => setInput2(e.target.value)}
+        />
       </div>
 
       <div className="calc-row">
         <label htmlFor="operator">Operator</label>
-        <select id="operator" ref={operatorRef} onChange={calculate}>
+        <select
+          id="operator"
+          value={operator}
+          onChange={(e) => setOperator(e.target.value)}
+        >
           <option value="+">+</option>
           <option value="-">−</option>
           <option value="*">×</option>
         </select>
       </div>
 
+      <button onClick={calculate}>Calculate</button>
+
       <div className="calc-row">
         <label htmlFor="result">Result</label>
-        <input id="result" ref={resultRef} readOnly />
+        <input id="result" readOnly value={result} />
       </div>
     </div>
   );
-}
+};
+
+export default Calculator;
