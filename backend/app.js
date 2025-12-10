@@ -39,7 +39,7 @@ app.post("/api/multiply", (req, res) => {
 // Adding login endpoint
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
-  if (username === "admin" && password === "password") {
+  if (username === "test@gmail.com" && password === "password123") {
     return res.json({ message: "Login successful" });
   }
   res.status(401).json({ error: "Invalid credentials" });
