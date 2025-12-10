@@ -36,4 +36,13 @@ app.post("/api/multiply", (req, res) => {
   res.json({ product });
 });
 
+// Adding login endpoint
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === "admin" && password === "password") {
+    return res.json({ message: "Login successful" });
+  }
+  res.status(401).json({ error: "Invalid credentials" });
+});
+
 module.exports = app;
