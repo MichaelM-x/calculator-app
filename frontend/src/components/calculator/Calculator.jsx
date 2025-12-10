@@ -53,6 +53,7 @@ const Calculator = () => {
           id="input2"
           value={input2}
           onChange={(e) => setInput2(e.target.value)}
+          onBlur={calculate}
         />
       </div>
 

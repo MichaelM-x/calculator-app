@@ -1,24 +1,25 @@
 describe("Login E2E Tests", () => {
   it("Login was successful and redirected to calculator page", () => {
-    // Mock backend API
-    cy.intercept("POST", "/api/login", {
+    // Intercept backend API request
+    cy.intercept("POST", "http://localhost:5000/api/login", {
       statusCode: 200,
-      body: { message: "Login successful" },
+      body: { message: "Login successful", token: "abc123" },
     }).as("loginRequest");
 
     // Visit login page
-    cy.visit("/login");
+    cy.visit("http://localhost:5173/login");
 
-    // Fill in login form
+    // Fill login inputs
     cy.get('input[name="username"]').type("test@gmail.com");
     cy.get('input[name="password"]').type("password123");
 
-    // Submit login form
+    // Submit
     cy.get('button[type="submit"]').click();
-    // Wait for the login API call to complete
+
+    // Wait for mocked API call
     cy.wait("@loginRequest");
 
-    // Verify redirection to calculator page
+    // Assert redirect
     cy.url().should("include", "/calculator");
   });
 });
