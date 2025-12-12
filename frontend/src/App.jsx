@@ -1,16 +1,15 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import Calculator from "./components/calculator/Calculator.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./components/auth/Login";
+import Calculator from "./components/calculator/Calculator";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="App">
-      <Calculator />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/calculator" element={<Calculator />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
