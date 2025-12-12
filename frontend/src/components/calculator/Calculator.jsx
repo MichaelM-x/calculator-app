@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Calculator.css";
+import { PropertyCard } from "../property-card/PropertyCard";
 
 const Calculator = () => {
   const [input1, setInput1] = useState("");
@@ -38,6 +39,14 @@ const Calculator = () => {
 
   return (
     <div className="calc-container">
+      <PropertyCard
+        title="Calculator"
+        price={0}
+        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx_joEMzm8eEiDS4Z7dpEdhmRz_9B4qLRP4Q&s"
+        size="large"
+      />
+
+      <h2>Simple Calculator</h2>
       <div className="calc-row">
         <label htmlFor="input1">Input1</label>
         <input
